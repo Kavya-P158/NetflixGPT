@@ -1,10 +1,14 @@
+import Body from "./Components/Body";
+import Browse from "./Components/Browse";
+import Login from "./Components/Login";
 
 
 
 function App() {
   return (
     <div className="App">
-      <h2 className="text-center text-red-700">Let's create Netflix GPT</h2>
+
+      <Body />
     </div>
   );
 }
