@@ -41,5 +41,5 @@ export const language = [{
 
 
 
-export const OPENAIKEY = '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';
+export const OPENAIKEY = process.env.REACT_APP_OPENAI_KEY;
 
