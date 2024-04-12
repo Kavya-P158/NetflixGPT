@@ -1,6 +1,7 @@
 import React from 'react'
 import GPTSearchbar from './GPTSearchbar'
 import GPTMovieSuggestion from './GPTMovieSuggestion'
+import moviedata from "./GPTSearchbar"
 import { bgimage } from '../utils/constant'
 
 const GPTSearch = () => {
@@ -17,6 +18,7 @@ const GPTSearch = () => {
             <div className=' '>
                 <GPTSearchbar />
                 <GPTMovieSuggestion />
+
             </div>
 
 

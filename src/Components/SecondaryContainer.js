@@ -6,7 +6,7 @@ const SecondaryContainer = () => {
     const movies = useSelector((store) => store.movies)
     return (
 
-        <div className=' bg-black text-white'>
+        <div className=' bg-black bg-cover text-white'>
 
             <div className='mt-0 md:-mt-52 relative  z-20 pl-4 md:m-2 md:p-14 md:pl-12 '>
 

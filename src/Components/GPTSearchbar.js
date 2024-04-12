@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { API_Options, language } from '../utils/constant'
 import { lang } from '../utils/language'
@@ -6,12 +6,18 @@ import openaiconfig from '../utils/openai'
 import { useDispatch } from 'react-redux';
 import { addGPTMovieResult } from '../utils/gptSlice'
 
+
+import Loader from "./Loader"
 const GPTSearchbar = () => {
     const languageselected = useSelector((store) => store.app?.language)
     const dispatch = useDispatch()
     const GPTSearchtext = useRef(null)
+    const [loading, setLoading] = useState(false)
+
+
 
     const FetchMovies = async (movie) => {
+
         const moviefetch = await fetch("https://api.themoviedb.org/3/search/movie?query=" + movie + "&include_adult=false&language=en-US&page=1",
             API_Options)
 
@@ -20,9 +26,12 @@ const GPTSearchbar = () => {
         const data = await moviefetch.json();
 
 
+
         return data.results;
     }
+
     const handleGPTSubmit = async () => {
+
         console.log(GPTSearchtext.current.value)
         const GPTQuery = 'Act as a movie recommendation system and suggest some movies for the query: ' + GPTSearchtext.current.value + ' Only give me names of five movies, comma separated like the example results given ahead. Example result: Gadar,Sholey,Don,Golmaal'
         const GPTResult = await openaiconfig.chat.completions.create({
@@ -32,14 +41,16 @@ const GPTSearchbar = () => {
 
 
         const gptmovies = GPTResult?.choices?.[0]?.message.content.split(",")
-
+        setLoading(true)
 
 
         const data = gptmovies.map((item) => FetchMovies(item));
 
         const tmdbResults = await Promise.all(data);
 
+        setLoading(false)
         console.log(tmdbResults);
+
 
 
         dispatch(addGPTMovieResult({ movieNames: gptmovies, MovieResult: tmdbResults }))
@@ -47,7 +58,6 @@ const GPTSearchbar = () => {
 
 
     }
-
 
 
 
@@ -67,6 +77,8 @@ const GPTSearchbar = () => {
                     {lang[languageselected].Search}
                 </button>
             </form>
+
+            {loading && <Loader loading={loading} />}
 
         </div>
     )
