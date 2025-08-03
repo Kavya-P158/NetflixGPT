@@ -2,10 +2,11 @@ import React, { useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { API_Options, language } from '../utils/constant'
 import { lang } from '../utils/language'
-import openaiconfig from '../utils/openai'
+// import openaiconfig from '../utils/openai'
 import { useDispatch } from 'react-redux';
 import { addGPTMovieResult } from '../utils/gptSlice'
-
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import { OPENAIKEY } from '../utils/constant';
 
 import Loader from "./Loader"
 const GPTSearchbar = () => {
@@ -15,6 +16,9 @@ const GPTSearchbar = () => {
     const [loading, setLoading] = useState(false)
 
 
+
+// Initialize Gemini API with your API key
+const genAI = new GoogleGenerativeAI(OPENAIKEY);
 
     const FetchMovies = async (movie) => {
 
@@ -34,11 +38,11 @@ const GPTSearchbar = () => {
 
         console.log(GPTSearchtext.current.value)
         const GPTQuery = 'Act as a movie recommendation system and suggest some movies for the query: ' + GPTSearchtext.current.value + ' Only give me names of five movies, comma separated like the example results given ahead. Example result: Gadar,Sholey,Don,Golmaal'
-        const GPTResult = await openaiconfig.chat.completions.create({
-            messages: [{ role: 'user', content: GPTQuery }],
-            model: 'gpt-3.5-turbo',
-        });
-
+         const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+        const GPTResult = await model.generateContent(GPTQuery);
+        const response=await GPTResult.response;
+        const GPTRESULT= await response.text()
+        console.log(GPTRESULT);
 
         const gptmovies = GPTResult?.choices?.[0]?.message.content.split(",")
         setLoading(true)

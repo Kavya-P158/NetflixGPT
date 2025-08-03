@@ -43,7 +43,7 @@ const Header = ({ signin }) => {
         const { uid, email, username } = user;
         dispatch(addUser({ uid: uid, email: email, username: username }));
 
-        navigate("/browse")
+        // navigate("/browse")
         // ...
       } else {
         // User is signed out
